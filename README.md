@@ -1,2 +1,1 @@
 # kotlin-practices
-# kotlin-practices

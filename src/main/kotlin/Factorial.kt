@@ -4,12 +4,11 @@ date: June 15 2019
 web site: http://popcornbyte.com
 */
 
-tailrec fun factorial(n: Int, memo: Array<Int>): Int{
+fun factorial(n: Int, memo: Array<Int>): Int{
     return when(memo[n -1]) {
          0 -> {
-            val x = factorial(n-1, memo) * n
-            memo[n-1] = x
-            memo[n-1]
+             memo[n-1] = factorial(n-1, memo) * n
+             memo[n-1]
         } else -> memo[n -1]
     }
 }

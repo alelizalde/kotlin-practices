@@ -13,7 +13,7 @@ class CombineTwoStrings {
 }
 
 fun main() {
-    val combine = CombineTwoStrings()
+    val combineTwoStrings = CombineTwoStrings()
     val dic = listOf(listOf('a', 'b', 'c'), listOf('d', 'e', 'f'))
-    combine.`do`(dic, 0, "")
+    combineTwoStrings.`do`(dic, 0, "")
 }

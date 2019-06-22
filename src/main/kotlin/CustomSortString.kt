@@ -1,23 +1,23 @@
 
 fun customSortString(S: String, T: String): String {
     val position = mutableMapOf<Char, Int>()
-    var ans = StringBuilder()
+    val ans = StringBuilder()
     for (s in S) {
-        position.put(s, 0)
+        position[s] = 0
     }
 
-    var tmpStr = StringBuilder()
+    val tmpStr = StringBuilder()
     for(t in T){
         if(position.contains(t)) {
-            position.put(t, position[t]!!.plus(1))
+            position[t] = position[t]?:0.plus(1)
         } else {
             tmpStr.append(t.toString())
         }
     }
     //print(position)
     for(s in S) {
-        val count = position[s]
-        for(j in 0 until count!!) ans.append(s)
+        val count = position[s]?:0
+        for(j in 0 until count) ans.append(s)
     }
     ans.append(tmpStr)
 

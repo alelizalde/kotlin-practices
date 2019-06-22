@@ -13,7 +13,7 @@ fun lengthOfLongestSubstring(s: String): Int {
     var i = 0
     while (j < n) {
         if (map.containsKey(s[j])) {
-            i = Math.max(map[s[j]]!!, i)
+            i = Math.max(map[s[j]]?:Integer.MIN_VALUE, i)
         }
         ans = Math.max(ans, j - i + 1)
         map[s[j]] = j + 1

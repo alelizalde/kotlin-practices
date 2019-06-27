@@ -1,8 +1,11 @@
 fun main() {
-    val arr = intArrayOf(2, 10, 4, 16, 6)
+    val arr = intArrayOf(2, 10, 6, 16, 4)
     val memo: MutableMap<String, Int> = mutableMapOf()
+    val ans: ArrayList<List<Int>> = arrayListOf()
     //println(dpMemo(arr, 16, arr.size - 1, memo))
-    println(dpTab(arr, 16))
+    //dpMemoList(arr, 16, arr.size - 1, mutableMapOf(), ArrayList(), ans)
+    dpMemoListButtomUp(arr, 16, 0, mutableMapOf(), ArrayList(), ans)
+    println(ans)
 }
 
 fun dpMemo (arr: IntArray, total: Int, pointer: Int, memo: MutableMap<String, Int>): Int {
@@ -26,26 +29,54 @@ fun dpMemo (arr: IntArray, total: Int, pointer: Int, memo: MutableMap<String, In
 
 }
 
-fun dpTab (arr: IntArray, total: Int): Int {
-    val dp = IntArray(arr.size + 1)
-    dp[0] = 1
-    for (i in 0 until arr.size){
-        var currTotal = total
-        for (j in i + 1 until arr.size) {
-            println("total: $total, pointer: ${arr[j]}")
-            dp[j] = when {
-                currTotal == 0 -> 1
-                currTotal < 0 -> 0
-                arr[j] > arr.size -> 0
-                currTotal < arr[j] -> dp[j - 1]
-                else -> {
-                    currTotal -= arr[j]
-                    dp[j - 1]
-                }
-            }
-        }
+fun dpMemoList(arr: IntArray, total: Int, pointer: Int, memo: MutableMap<String, Boolean>, list: ArrayList<Int>, ans: ArrayList<List<Int>>){
+    val key = "$total-$pointer"
+    if (memo.containsKey(key)) {
+        println("returning $key: ${memo[key]}")
+        return
     }
 
-    return dp[arr.size]
+    println("memo: $memo, total: $total, pointer: $pointer")
+    when {
+        total == 0 -> ans.add(ArrayList(list))
+        total < 0 -> return
+        pointer < 0 -> return
+        total < arr[pointer] -> {
+            dpMemoList (arr, total, pointer - 1, memo, list, ans)
+        }
+        else -> {
+            list.add(arr[pointer])
+            dpMemoList (arr, total - arr[pointer], pointer - 1, memo, list, ans)
+            list.remove(arr[pointer])
+            dpMemoList (arr, total, pointer - 1, memo, list, ans)
+        }
+    }
+    println("key: $key=${memo[key]}")
+    memo[key] = true
+}
 
+fun dpMemoListButtomUp(arr: IntArray, total: Int, pointer: Int, memo: MutableMap<String, Boolean>, list: ArrayList<Int>, ans: ArrayList<List<Int>>){
+    val key = "$total-$pointer"
+    if (memo.containsKey(key)) {
+        println("returning $key: ${memo[key]}")
+        return
+    }
+
+    println("memo: $memo, total: $total, pointer: $pointer")
+    when {
+        total == 0 -> ans.add(ArrayList(list))
+        total < 0 -> return
+        pointer > arr.size -1 -> return
+        total < arr[pointer] -> {
+            dpMemoListButtomUp (arr, total, pointer + 1, memo, list, ans)
+        }
+        else -> {
+            list.add(arr[pointer])
+            dpMemoListButtomUp (arr, total - arr[pointer], pointer + 1, memo, list, ans)
+            list.remove(arr[pointer])
+            dpMemoListButtomUp (arr, total, pointer + 1, memo, list, ans)
+        }
+    }
+    println("key: $key=${memo[key]}")
+    memo[key] = true
 }

@@ -1,22 +1,18 @@
 
-fun generateParenthesis(n: Int): List<String> {
-    val ans = ArrayList<String>()
-    backtrack(ans, "", 0, 0, n)
-    return ans
-}
-
-fun backtrack(ans: MutableList<String>, cur: String, open: Int, close: Int, max: Int) {
+fun generateParenthesis(ans: MutableList<String>, cur: String = "", open: Int = 0, close: Int = 0, max: Int) {
     if (cur.length == max * 2) {
         ans.add(cur)
         return
     }
 
     if (open < max)
-        backtrack(ans, "$cur(", open + 1, close, max)
+        generateParenthesis(ans, "$cur(", open + 1, close, max)
     if (close < open)
-        backtrack(ans, "$cur)", open, close + 1, max)
+        generateParenthesis(ans, "$cur)", open, close + 1, max)
 }
 
 fun main() {
-    println(generateParenthesis(3))
+    val ans = ArrayList<String>()
+    generateParenthesis(ans = ans, max = 3)
+    println(ans)
 }

@@ -1,27 +1,56 @@
+
+import java.util.Stack
+
+
 fun main() {
-    val candidates = intArrayOf(2, 4, 6, 10)
-    val memo: MutableMap<String, Int> = mutableMapOf()
-    val counter = mutableMapOf<Int, Int>()
-    val ans = mutableListOf<List<Int>>()
-    candidates.forEach {counter[it] = (counter[it]?:0) + 1}
-    println(dpMemoPractice(candidates, 16, 0, memo))
+
+    println(
+        parseBoolExpr("&(t,f)")
+    )
 }
 
-fun dpMemoPractice (arr : IntArray, total: Int, start: Int, memo: MutableMap<String, Int>): Int {
-    val key = "$total:$start"
-    if (memo.containsKey(key))
-        return memo[key]?:0
-
-    //println("total: $total, start: $start")
-    print("{$total, $start}")
-    memo[key] = when {
-        total == 0 -> return 1
-        total < 0 -> return 0
-        start >= arr.size -> return 0
-        total < arr[start] -> dpMemoPractice (arr, total, start + 1, memo)
-        else -> dpMemoPractice (arr, total - arr[start], start + 1, memo) + dpMemoPractice (arr, total, start + 1, memo)
+fun parseBoolExpr(expression: String): Boolean {
+    val operands = Stack<Char>()
+    val operators = Stack<Char>()
+    for (ch in expression.toCharArray()) {
+        if (ch == ',') {
+            continue
+        } else if (ch == '(' || ch == 't' || ch == 'f') {
+            operands.push(ch)
+        } else if (ch == ')') {
+            //pop until open bracket
+            var `val` = false
+            val opr = operators.pop()
+            var popped = ""
+            while (!operands.isEmpty() && operands.peek() != '(') {
+                popped += operands.pop()
+            }
+            `val` = eval(opr, popped)
+            if (!operands.isEmpty())
+                operands.pop()
+            if (`val`)
+                operands.push('t')
+            else
+                operands.push('f')
+        } else if (ch == '&' || ch == '|' || ch == '!') {
+            operators.push(ch)
+        }
     }
-    //println(memo)
-    return memo[key]?:0
+    val res = operands.pop()
+    return res == 't'
 }
 
+fun eval(opr: Char, popped: String): Boolean {
+    var tcount = 0
+    for (ch in popped.toCharArray()) {
+        if (ch == 't')
+            tcount++
+        if (opr == '&' && ch == 'f')
+            return false
+        else if (opr == '!' && ch == 't')
+            return false
+        else if (opr == '!' && ch == 'f')
+            return true
+    }
+    return tcount > 0
+}
